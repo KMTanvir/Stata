@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Session 1: Overview of Stata and Working Environment</title>
+<style>
+:root{
+  --bg:#f6f7f9; --card:#ffffff; --ink:#14202e; --muted:#5b6b7c; --line:#e1e6ec;
+  --brand:#1a5f7a; --brand2:#0f3d52; --accent:#e8a33d; --ok:#2f8f5b; --bad:#c2453b;
+  --codebg:#eef3f7;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0d141c;--card:#152130;--ink:#e8eef5;--muted:#93a3b5;--line:#243447;--brand:#5bb3d1;--codebg:#1b2a3a;--ok:#5cc08a;--bad:#e8786e}
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;display:flex;flex-direction:column}
+a{color:var(--brand);text-decoration:none}
+a:hover{text-decoration:underline}
+.bar{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;font-size:14px;color:var(--muted);border-bottom:1px solid var(--line);background:var(--card)}
+.bar b{color:var(--ink)}
+.tabs{display:flex;gap:6px}
+.tab{border:1px solid var(--line);background:transparent;padding:6px 18px;border-radius:99px;font:inherit;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer}
+.tab:hover{color:var(--brand);border-color:var(--brand)}
+.tab.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.bar .left{flex:1}.bar .cnt{flex:1;text-align:right}
+.prog{height:4px;background:var(--line)}
+.prog i{display:block;height:100%;width:0;background:var(--brand);transition:width .25s}
+.stage{flex:1;overflow:auto;padding:30px 24px}
+.slide{display:none;max-width:940px;margin:0 auto;animation:fade .25s ease}
+.slide.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.kicker{font-size:12px;letter-spacing:1.6px;text-transform:uppercase;color:var(--brand);font-weight:700;margin-bottom:6px}
+h1{font-size:clamp(30px,5vw,46px);line-height:1.15;margin:0 0 16px}
+h2{font-size:clamp(24px,3.4vw,32px);line-height:1.25;margin:0 0 18px}
+h3{font-size:18px;margin:20px 0 6px}
+p,li{font-size:18px}
+p{margin:0 0 12px}
+ul,ol{margin:0 0 14px;padding-left:24px}
+li{margin:7px 0}
+.title{background:linear-gradient(135deg,#0f3d52,#1a5f7a 60%,#2a7f9c);color:#fff;border-radius:20px;padding:64px 48px}
+.title .kicker{color:rgba(255,255,255,.8)}
+.title p{font-size:19px;opacity:.93;max-width:640px}
+.title{padding:48px 48px 40px}
+.obj{margin-top:18px;padding-top:6px;border-top:1px solid rgba(255,255,255,.25)}
+.obj h3{margin:16px 0 6px;font-size:18px}
+.obj p,.obj li{font-size:17px;opacity:.95}
+.obj ul{margin:6px 0 0}
+.chip{display:inline-block;background:rgba(255,255,255,.17);padding:4px 14px;border-radius:99px;font-size:13px;margin:0 8px 8px 0}
+table{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;margin:8px 0 16px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;font-size:16px}
+th{background:color-mix(in srgb,var(--brand) 9%,transparent);font-size:12px;letter-spacing:.5px;text-transform:uppercase;color:var(--muted)}
+tr:last-child td{border-bottom:none}
+code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.9em;color:var(--brand);background:var(--codebg);padding:1px 6px;border-radius:5px}
+.codewrap{position:relative;margin:10px 0 16px}
+pre{margin:0;background:var(--codebg);border:1px solid var(--line);border-left:4px solid var(--brand);border-radius:10px;padding:16px 20px;overflow:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:16px;line-height:1.65;color:var(--ink)}
+pre code{background:none;padding:0;color:inherit;font-size:inherit}
+pre .k{color:var(--brand);font-weight:600}
+pre .c{color:var(--muted);font-style:italic}
+.exq{font-size:18px;margin:0 0 12px}.exq ul{margin:6px 0 0}
+.cp{position:absolute;top:8px;right:8px;font-size:12px;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:7px;padding:3px 10px;cursor:pointer}
+.cp:hover{color:var(--brand);border-color:var(--brand)}
+.note{border-left:4px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,transparent);padding:12px 18px;border-radius:0 10px 10px 0;margin:16px 0}
+.note p{font-size:16px;margin:0}
+.anat{display:flex;flex-wrap:wrap;gap:10px;margin:12px 0}
+.anat div{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;text-align:center;min-width:120px;flex:1}
+.anat b{display:block;font-family:ui-monospace,Menlo,Consolas,monospace;color:var(--brand);font-size:18px}
+.anat span{font-size:13px;color:var(--muted)}
+.agenda{display:flex;height:30px;border-radius:9px;overflow:hidden;margin:6px 0 14px;font-size:12px;color:#fff}
+.agenda div{display:grid;place-items:center}
+svg{width:100%;height:auto;display:block;margin:6px 0}
+svg .p{fill:color-mix(in srgb,var(--brand) 9%,var(--card));stroke:var(--brand);stroke-width:1.2}
+svg .t{fill:var(--ink);font:600 15px system-ui,sans-serif}
+svg .s{fill:var(--muted);font:13px system-ui,sans-serif}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 18px;margin:12px 0}
+summary{cursor:pointer;font-weight:600;font-size:17px}
+details[open] summary{margin-bottom:8px}
+.opt{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:11px 16px;margin:8px 0;font:inherit;font-size:17px;color:var(--ink);cursor:pointer}
+.opt:hover{border-color:var(--brand)}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 14%,transparent)}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 12%,transparent)}
+.fb{font-size:16px;color:var(--muted);margin-top:10px;display:none}
+.big{font-size:56px;font-weight:700;color:var(--brand);line-height:1}
+.ctrl{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 24px;border-top:1px solid var(--line);background:var(--card)}
+.ctrl button{font:inherit;font-size:15px;font-weight:600;border:1px solid var(--brand);background:transparent;color:var(--brand);padding:8px 20px;border-radius:9px;cursor:pointer}
+.ctrl button:hover:not(:disabled){background:var(--brand);color:#fff}
+.ctrl button:disabled{opacity:.35;cursor:default}
+.hint{font-size:12px;color:var(--muted);text-align:center}
+@media(max-width:640px){.title{padding:40px 24px}.hint{display:none}.cp{position:static;margin-top:6px}}
+@media print{
+  body{display:block;height:auto}.bar,.prog,.ctrl{display:none}
+  .stage{overflow:visible}.slide{display:block !important;page-break-after:always;animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="bar"><span class="left"><a href="index.html">All sessions</a></span><div class="tabs" role="tablist"><button class="tab on" data-part="slides">Slides</button><button class="tab" data-part="exercise">Exercise</button></div><span id="count" class="cnt">1 / 1</span></div>
+<div class="prog"><i id="pbar"></i></div>
+
+<div class="stage" id="stage">
+<div data-part="slides">
+<div class="slide title">
+  <div class="kicker">Session 1 of 10</div>
+  <h1>Overview of Stata and Working Environment</h1>
+  <p>What Stata is, how its windows are organised, how to read a command, how to find help, how data are entered by hand, where Stata looks for files, and how do files work.</p>
+  <span class="chip">60 minutes</span><span class="chip">Lab based exercise</span><span class="chip">Stata 15 or later</span>
+  <div class="obj">
+    <h3>Learning objectives</h3>
+    <p>By the end of this session, participants will be able to:</p>
+    <ul>
+      <li>Identify the main windows of Stata and state the purpose of each.</li>
+      <li>Read a Stata command and explain each of its parts.</li>
+      <li>Recognise common error messages and their usual causes.</li>
+      <li>Use the help system to learn an unfamiliar command.</li>
+      <li>Set the working folder and confirm it.</li>
+      <li>Explain what a do file is and how comments are written in it.</li>
+    </ul>
+  </div>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>What Stata is</h2>
+  <p>Stata is a statistical package for data management, analysis, graphics and reporting. It is used widely in public health, economics and the social sciences.</p>
+  <ul>
+    <li>Work is <b>command driven</b>. Menus exist, but every action corresponds to a typed command that can be saved and repeated exactly.</li>
+    <li>Stata holds <b>one dataset in memory</b> at a time, and every command acts on that dataset.</li>
+    <li>Stata is available in editions (BE, SE and MP) that differ mainly in data size and speed. The commands taught here work in all of them.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>Working conventions for this course</h2>
+  <ul>
+    <li>All commands in this course run in <b>Stata 15 and later</b>.</li>
+    <li>Commands and variable names are <b>case sensitive</b>. The command <code>summarize</code> exists, but <code>Summarize</code> does not.</li>
+    <li>Code appears in light panels. Each panel has a <b>Copy</b> button, and the text may be pasted into the Do file Editor.</li>
+    <li>Menu names and window titles can differ slightly between versions. The typed commands do not.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>The dataset: Bangladesh Demographic and Health Survey 2022</h2>
+  <p>This course uses the <b>women's individual recode file</b> of the 2022 Bangladesh Demographic and Health Survey (BDHS). It holds the interview records of women of reproductive age, aged 15 to 49, with one row for each woman.</p>
+  <ul>
+    <li>File name: <code>BDIR81FL.DTA</code>, in Stata format.</li>
+    <li>The file contains 30,078 women and 5,425 variables. Variable names follow the DHS coding scheme, such as <code>v012</code> for age.</li>
+  </ul>
+  <div class="note"><p><b>Access.</b> Download the dataset from the shared course folder, using the dataset button on the course home page, and save it in your working folder. Use the data for this course only, and cite the source as The DHS Program, BDHS 2022.</p></div>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>Variables used in the course</h2>
+  <table>
+    <tr><th>Variable</th><th>Meaning</th></tr>
+    <tr><td><code>v001</code>, <code>v002</code>, <code>v003</code></td><td>Cluster number, household number and respondent line number. Together they identify a woman.</td></tr>
+    <tr><td><code>v005</code></td><td>Women's sample weight, used in later sessions.</td></tr>
+    <tr><td><code>v012</code></td><td>Current age of the respondent, in years.</td></tr>
+    <tr><td><code>v024</code></td><td>Region, that is, the division of residence.</td></tr>
+    <tr><td><code>v025</code></td><td>Type of place of residence: urban or rural.</td></tr>
+    <tr><td><code>v106</code></td><td>Highest level of education attained.</td></tr>
+    <tr><td><code>v190</code></td><td>Wealth index, in five groups.</td></tr>
+    <tr><td><code>v201</code></td><td>Total number of children ever born.</td></tr>
+  </table>
+  <p>Survey weights are introduced after the basic tools are in place, so early summaries are unweighted.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>The default Stata layout</h2>
+  <svg viewBox="0 0 760 350" role="img" aria-label="Schematic of the default Stata window layout">
+    <rect class="p" x="10" y="10" width="740" height="30" rx="6"/>
+    <text class="s" x="24" y="30">Toolbar: open, save, do file editor, data editor, data browser</text>
+    <rect class="p" x="10" y="50" width="180" height="230" rx="6"/>
+    <text class="t" x="24" y="76">History</text><text class="s" x="24" y="98">Commands already run</text>
+    <rect class="p" x="200" y="50" width="340" height="230" rx="6"/>
+    <text class="t" x="214" y="76">Results</text><text class="s" x="214" y="98">Output and error messages</text>
+    <rect class="p" x="550" y="50" width="200" height="108" rx="6"/>
+    <text class="t" x="564" y="76">Variables</text><text class="s" x="564" y="98">Names in the dataset</text>
+    <rect class="p" x="550" y="172" width="200" height="108" rx="6"/>
+    <text class="t" x="564" y="198">Properties</text><text class="s" x="564" y="220">Label, type and format</text>
+    <rect class="p" x="200" y="290" width="550" height="50" rx="6"/>
+    <text class="t" x="214" y="311">Command</text><text class="s" x="214" y="330">Type one command here and press Enter</text>
+  </svg>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>What each window does</h2>
+  <table>
+    <tr><th>Window</th><th>Purpose</th></tr>
+    <tr><td>Command</td><td>Where a single command is typed and executed with Enter.</td></tr>
+    <tr><td>Results</td><td>Displays output, including error messages.</td></tr>
+    <tr><td>History</td><td>Lists commands run in the session. Older versions call it Review. A double click runs a command again.</td></tr>
+    <tr><td>Variables</td><td>Lists the variables of the dataset in memory. Clicking a name pastes it into the Command window.</td></tr>
+    <tr><td>Properties</td><td>Shows the label, type and format of the selected variable.</td></tr>
+  </table>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>Windows that open on request</h2>
+  <ul>
+    <li><b>Do file Editor:</b> where scripts of commands are written and run.</li>
+    <li><b>Data Browser</b> (<code>browse</code>): displays the data without allowing changes.</li>
+    <li><b>Data Editor</b> (<code>edit</code>): displays the data and allows changes.</li>
+    <li><b>Viewer:</b> shows help pages.</li>
+    <li><b>Graph window:</b> shows charts produced by graph commands.</li>
+  </ul>
+  <div class="note"><p><b>Browse before you edit.</b> A stray keystroke in the Data Editor can alter a value. Use the Data Browser unless editing is intended.</p></div>
+</div>
+<div class="slide">
+  <div class="kicker">Introduction</div>
+  <h2>Entering data in the Data Editor</h2>
+  <p>Small tables can be typed directly into the Data Editor, without writing any command.</p>
+  <ul>
+    <li>Open the <b>Data Editor</b> from the toolbar.</li>
+    <li>Click the first cell and type a value. Use Tab to move across and Enter to move down.</li>
+    <li>Stata names the columns <code>var1</code>, <code>var2</code> and so on. Select a variable and change its name and label in the <b>Properties</b> window.</li>
+    <li>A column that holds only numbers becomes a numeric variable. A column that holds text becomes a string variable.</li>
+  </ul>
+  <div class="note"><p>Typing suits very small tables. Larger data should be imported from a file, which is covered in Session 2.</p></div>
+</div>
+<div class="slide">
+  <div class="kicker">Syntax and help</div>
+  <h2>The general form of a command</h2>
+  <p>Most Stata commands follow one pattern. Everything after the command name is optional.</p>
+  <div class="anat">
+    <div><b>command</b><span>what to do</span></div>
+    <div><b>varlist</b><span>which variables</span></div>
+    <div><b>if</b><span>which observations, by condition</span></div>
+    <div><b>in</b><span>which observations, by position</span></div>
+    <div><b>, options</b><span>how to do it</span></div>
+  </div>
+</div>
+<div class="slide">
+  <div class="kicker">Syntax and help</div>
+  <h2>Reading a command</h2>
+  <div class="codewrap"><pre><code>summarize v012 v201 if v025 == 2, detail</code></pre></div>
+  <p>This asks Stata to summarise the variables <code>v012</code> (age) and <code>v201</code> (children ever born), only for observations where <code>v025</code> equals 2, with detailed statistics.</p>
+  <ul>
+    <li>A <b>double equals sign</b> tests a condition. A single sign assigns a value.</li>
+    <li>The <b>comma</b> separates the options from the rest of the command.</li>
+    <li>The code for rural is shown for illustration. Confirm the codes of a variable with <code>codebook v025</code> before relying on them.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Syntax and help</div>
+  <h2>Useful rules</h2>
+  <ul>
+    <li>Commands and variable names are case sensitive, and are normally written in lower case.</li>
+    <li>Many commands have abbreviations, for example <code>sum</code> for <code>summarize</code>. This course writes commands in full for clarity.</li>
+    <li>A <b>prefix</b> repeats a command for each group, for example <code>bysort v025: summarize v012</code>.</li>
+    <li>If a command is wrong, Stata prints a message in red together with a return code such as r(199). Nothing is changed in the data.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Syntax and help</div>
+  <h2>Common error messages</h2>
+  <table>
+    <tr><th>Message</th><th>Code</th><th>Usual cause</th></tr>
+    <tr><td>unrecognized command</td><td>r(199)</td><td>Misspelt command, or wrong case such as <code>Summarize</code>.</td></tr>
+    <tr><td>variable not found</td><td>r(111)</td><td>Misspelt variable name, or no dataset loaded.</td></tr>
+    <tr><td>file not found</td><td>r(601)</td><td>Wrong file name, or the wrong working folder.</td></tr>
+    <tr><td>no; dataset in memory has changed since last saved</td><td>r(4)</td><td>Loading another dataset without the <code>clear</code> option.</td></tr>
+  </table>
+</div>
+<div class="slide">
+  <div class="kicker">Syntax and help</div>
+  <h2>Getting help</h2>
+  <div class="codewrap"><pre><code>* Open the help page of a command
+help summarize
+
+* Search by topic when the command name is unknown
+search regression
+
+* Look for user written commands
+findit outreg2</code></pre></div>
+  <p>Help pages open in the Viewer. Each begins with the syntax, and worked examples appear at the end. Reading the examples first is often the quickest way to learn a command.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Working folder</div>
+  <h2>The working folder</h2>
+  <p>Stata reads and writes files in its <b>working folder</b> unless told otherwise. Setting it at the start of each session prevents most file not found errors.</p>
+  <div class="codewrap"><pre><code>* Show the current working folder
+pwd
+
+* Create a folder for the course (run once)
+mkdir StataCourse
+
+* Change into it; use quotation marks if the path has spaces
+cd "C:\StataCourse"
+
+* The same on a Mac
+cd "/Users/yourname/StataCourse"
+
+* List the files in the folder
+ls</code></pre></div>
+  <div class="note"><p>Replace the example paths with a folder on your computer, place the BDHS file in it, and confirm with <code>pwd</code> and <code>ls</code>.</p></div>
+</div>
+<div class="slide">
+  <div class="kicker">Do files</div>
+  <h2>Do files</h2>
+  <p>A <b>do file</b> is a plain text file of commands that Stata runs in order. Typing in the Command window suits exploration, whereas a do file is the right place for work that must be repeated, checked or shared.</p>
+  <ul>
+    <li>Open the editor from the toolbar, from the menu, or by typing <code>doedit</code>.</li>
+    <li>Save the file with the extension <code>.do</code>.</li>
+    <li>Run it with the Execute (do) button, or press Ctrl+D on Windows and Cmd+Shift+D on a Mac. If lines are selected, only those lines run.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Do files</div>
+  <h2>Comments</h2>
+  <table>
+    <tr><th>Style</th><th>Use</th></tr>
+    <tr><td><code>* text</code></td><td>A comment on its own line, with the asterisk at the start.</td></tr>
+    <tr><td><code>// text</code></td><td>A comment at the end of a command line, with a space before the slashes.</td></tr>
+    <tr><td><code>/* text */</code></td><td>A comment that may run over several lines.</td></tr>
+    <tr><td><code>///</code></td><td>Continues a long command onto the next line.</td></tr>
+  </table>
+  <p>Comments explain why a step is taken. They are ignored when the do file runs.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Summary</div>
+  <h2>Key points</h2>
+  <table>
+    <tr><th>Topic</th><th>Remember</th></tr>
+    <tr><td>Windows</td><td>Command to type, Results to read, History to repeat, Variables and Properties to inspect the data.</td></tr>
+    <tr><td>Syntax</td><td>command, then varlist, then if or in, then a comma and options.</td></tr>
+    <tr><td>Case</td><td>Commands and variable names are case sensitive and usually lower case.</td></tr>
+    <tr><td>Errors</td><td>A message and a return code appear in red, and the data are not changed.</td></tr>
+    <tr><td>Help</td><td><code>help</code> for a known command, <code>search</code> for a topic.</td></tr>
+    <tr><td>Working folder</td><td><code>pwd</code> shows it, <code>cd</code> changes it, and files are read from it and written to it.</td></tr>
+    <tr><td>Do files</td><td>A saved list of commands, opened with <code>doedit</code>, that makes work repeatable.</td></tr>
+  </table>
+</div>
+</div>
+
+<div data-part="exercise">
+<div class="slide">
+  <div class="kicker">Exercise</div>
+  <h2>Practical exercises</h2>
+  <p>This part has six short tasks. The first four need no data: they ask you to name windows and read commands. The last two use Stata: setting the working folder and writing a first do file. Attempt each task before opening the answer.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 1 of 6</div>
+  <h2>Name the window</h2>
+  <div class="exq">Which window would you use to (a) type a command, (b) read the output, (c) see the commands already run, and (d) see the names of the variables?</div>
+  <details><summary>Show answer</summary>
+    <p>(a) Command, (b) Results, (c) History, (d) Variables.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 2 of 6</div>
+  <h2>Read a command</h2>
+  <div class="exq">Explain each part of this command: what it does, to which variables, for which observations, and with which option.
+    <div class="codewrap"><pre><code>summarize v012 v201 if v025 == 2, detail</code></pre></div></div>
+  <details><summary>Show answer</summary>
+    <p>The command <code>summarize</code> reports summary statistics for the variables <code>v012</code> and <code>v201</code>, only for observations where <code>v025</code> equals 2, and the option <code>detail</code> after the comma asks for detailed statistics.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 3 of 6</div>
+  <h2>Read two more commands</h2>
+  <div class="exq">Explain what each of these commands asks Stata to do.
+    <div class="codewrap"><pre><code>list v001 v002 v012 in 1/10
+tabulate v025 v106, row</code></pre></div></div>
+  <details><summary>Show answer</summary>
+    <p>The first prints the values of three variables for the first ten observations. The second gives a cross table of <code>v025</code> and <code>v106</code> with row percentages.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 4 of 6</div>
+  <h2>Interpret the errors</h2>
+  <div class="exq">Give the likely cause of each message, and say how it would be corrected.
+    <ul><li>unrecognized command: Summarize, r(199)</li><li>variable v02 not found, r(111)</li><li>file BDIR81FL.DTA not found, r(601)</li></ul></div>
+  <details><summary>Show answer</summary>
+    <ul><li>The command was typed with a capital letter. Write it as <code>summarize</code>.</li><li>The variable name is misspelt. Check the name in the Variables window.</li><li>The file name is wrong, or the working folder is not the folder that holds the file. Correct the name or the folder.</li></ul>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 5 of 6</div>
+  <h2>Set the working folder</h2>
+  <div class="exq">Create a folder called <code>StataCourse</code> on your computer, and save the BDHS file in it. In Stata, make it the working folder, confirm the change, and list the files it holds.</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>cd "C:\StataCourse"
+pwd
+ls</code></pre></div>
+    <p>The output of <code>pwd</code> shows the folder, and <code>ls</code> lists the BDHS file. On a Mac the path begins with <code>/Users/</code> and the name of the user.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 6 of 6</div>
+  <h2>Write a first do file</h2>
+  <div class="exq">Open the Do file Editor with <code>doedit</code>, type the three lines below, save the file as <code>session1.do</code>, and run it.</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>* Session 1: practice do file
+help summarize
+search regression</code></pre></div>
+    <p>The Viewer window opens with the help page and the search results.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Session 1 complete</div>
+  <h2>Next: Session 2</h2>
+  <p>The next session opens the BDHS dataset, and covers data types and structure, data entry and importing.</p>
+  <p><a href="lesson02.html"><b>Continue to Session 2</b></a> or <a href="index.html"><b>return to all sessions</b></a>.</p>
+</div>
+</div>
+</div>
+</div>
+
+<div class="ctrl">
+  <button id="prev">Previous</button>
+  <span class="hint">Use the left and right arrow keys. Press F for full screen.</span>
+  <button id="next">Next</button>
+</div>
+
+<script>
+// Highlight code and add copy buttons
+document.querySelectorAll('.codewrap').forEach(function(w){
+  var pre=w.querySelector('pre'), code=pre.querySelector('code'), raw=code.textContent;
+  code.innerHTML=raw.split('\n').map(function(line){
+    var e=line.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    if(/^\s*(\*|\/\/)/.test(line)) return '<span class="c">'+e+'</span>';
+    return e.replace(/^(\s*)([a-z]+)/,function(m,a,b){return a+'<span class="k">'+b+'</span>'});
+  }).join('\n');
+  var b=document.createElement('button');b.className='cp';b.textContent='Copy';
+  b.onclick=function(){
+    var ok=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy'},1400)};
+    if(navigator.clipboard){navigator.clipboard.writeText(raw).then(ok,ok)}else{ok()}
+  };
+  w.appendChild(b);
+});
+
+// Deck navigation: two parts (slides, exercise)
+var stage=document.getElementById('stage');
+var order=['slides','exercise'], label={slides:'Slides',exercise:'Exercise'};
+var list={}, part='slides', cur=0;
+order.forEach(function(p){list[p]=[].slice.call(document.querySelectorAll('[data-part="'+p+'"] > .slide'))});
+var allSlides=[].slice.call(document.querySelectorAll('.slide'));
+var prevB=document.getElementById('prev'), nextB=document.getElementById('next');
+function show(p,n){
+  part=p; var arr=list[p]; cur=Math.max(0,Math.min(arr.length-1,n));
+  allSlides.forEach(function(s){s.classList.remove('active')});
+  arr[cur].classList.add('active');
+  document.querySelectorAll('.tab').forEach(function(t){t.classList.toggle('on',t.dataset.part===p)});
+  document.getElementById('count').textContent=(cur+1)+' / '+arr.length;
+  document.getElementById('pbar').style.width=((cur+1)/arr.length*100)+'%';
+  prevB.disabled=cur===0;
+  var last=cur===arr.length-1, nx=order[order.indexOf(p)+1];
+  if(last&&nx){nextB.textContent='Go to '+label[nx];nextB.disabled=false}
+  else{nextB.textContent='Next';nextB.disabled=last}
+  stage.scrollTop=0;
+  try{history.replaceState(null,'','#'+p+'-'+(cur+1))}catch(e){}
+}
+function go(d){
+  var arr=list[part];
+  if(d>0&&cur===arr.length-1){var nx=order[order.indexOf(part)+1];if(nx)show(nx,0);return}
+  show(part,cur+d);
+}
+prevB.onclick=function(){go(-1)};
+nextB.onclick=function(){go(1)};
+document.querySelectorAll('.tab').forEach(function(t){t.onclick=function(){show(t.dataset.part,0)}});
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='PageDown'){if(!(cur===list[part].length-1))go(1)}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp')go(-1);
+  else if(e.key==='Home')show(part,0);
+  else if(e.key==='End')show(part,list[part].length-1);
+  else if(e.key==='f'||e.key==='F'){if(document.fullscreenElement)document.exitFullscreen();else document.documentElement.requestFullscreen&&document.documentElement.requestFullscreen()}
+});
+var h=(location.hash||'').slice(1).split('-'), sp=order.indexOf(h[0])>=0?h[0]:'slides', sn=parseInt(h[1],10);
+show(sp,isNaN(sn)?0:sn-1);
+</script>
+</body>
+</html>
