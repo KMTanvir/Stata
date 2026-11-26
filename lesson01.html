@@ -145,7 +145,7 @@ details[open] summary{margin-bottom:8px}
   <p>This course uses the <b>women's individual recode file</b> of the 2022 Bangladesh Demographic and Health Survey (BDHS). It holds the interview records of women of reproductive age, aged 15 to 49, with one row for each woman.</p>
   <ul>
     <li>File name: <code>BDIR81FL.DTA</code>, in Stata format.</li>
-    <li>The file contains 30,078 women and 5,425 variables. Variable names follow the DHS coding scheme, such as <code>v012</code> for age.</li>
+    <li>The file contains 30,078 women and 5,425 variables. Variable names follow the DHS coding scheme, such as <code>v012</code> for age. This is more than the default limit of 5,000 variables, so the limit must be raised before the file is opened.</li>
   </ul>
   <div class="note"><p><b>Access.</b> Download the dataset from the shared course folder, using the dataset button on the course home page, and save it in your working folder. Use the data for this course only, and cite the source as The DHS Program, BDHS 2022.</p></div>
 </div>
@@ -261,6 +261,7 @@ details[open] summary{margin-bottom:8px}
     <tr><td>variable not found</td><td>r(111)</td><td>Misspelt variable name, or no dataset loaded.</td></tr>
     <tr><td>file not found</td><td>r(601)</td><td>Wrong file name, or the wrong working folder.</td></tr>
     <tr><td>no; dataset in memory has changed since last saved</td><td>r(4)</td><td>Loading another dataset without the <code>clear</code> option.</td></tr>
+    <tr><td>no room to add more variables</td><td>r(900)</td><td>The dataset has more variables than the limit set by <code>maxvar</code>. Raise the limit with <code>set maxvar</code>.</td></tr>
   </table>
 </div>
 <div class="slide">
@@ -320,10 +321,28 @@ ls</code></pre></div>
 </div>
 <div class="slide">
   <div class="kicker">Opening a dataset</div>
+  <h2>Raising the variable limit with set maxvar</h2>
+  <p>Stata limits the number of variables that a dataset may hold. In Stata/SE and Stata/MP the default limit is 5,000. The BDHS file has 5,425 variables, so Stata refuses to open it until the limit is raised.</p>
+  <div class="codewrap"><pre><code>clear all
+set maxvar 10000</code></pre></div>
+  <ul>
+    <li><code>clear all</code> empties the memory. The limit can be changed only while no data are loaded.</li>
+    <li><code>set maxvar 10000</code> raises the limit to 10,000 variables for the current session. Add <code>, permanently</code> to keep the setting for later sessions.</li>
+    <li><code>query memory</code> shows the limit that is currently in force.</li>
+    <li>Stata/SE allows up to 32,767 variables, and Stata/MP allows more. Stata/BE is fixed at 2,048 variables and cannot be changed.</li>
+  </ul>
+  <div class="note"><p><b>Stata/BE users.</b> Load only the variables you need, by naming them before the file. This works in every edition.</p></div>
+  <div class="codewrap"><pre><code>use v001 v002 v003 v005 v012 v024 v025 v106 v190 v201 using "BDIR81FL.DTA", clear</code></pre></div>
+</div>
+<div class="slide">
+  <div class="kicker">Opening a dataset</div>
   <h2>Opening the BDHS dataset</h2>
-  <div class="codewrap"><pre><code>use "BDIR81FL.DTA", clear
+  <div class="codewrap"><pre><code>clear all
+set maxvar 10000
+use "BDIR81FL.DTA", clear
 describe, short</code></pre></div>
   <ul>
+    <li>The first two lines raise the variable limit, as explained on the previous slide.</li>
     <li><code>use</code> loads a Stata dataset into memory. The <code>clear</code> option discards any dataset already there.</li>
     <li><code>describe, short</code> reports only the number of observations and variables, along with the size of the data.</li>
   </ul>
@@ -466,6 +485,7 @@ list in 1/5</code></pre></div>
 
 clear all
 set more off
+set maxvar 10000
 
 cd "C:\StataCourse"
 
@@ -495,6 +515,7 @@ tabulate v106</code></pre></div>
   <h2>Commands: opening and importing data</h2>
   <table>
     <tr><th>Command</th><th>Purpose</th></tr>
+    <tr><td><code>clear all</code>, <code>set maxvar</code></td><td>Empty the memory and raise the variable limit.</td></tr>
     <tr><td><code>use</code>, <code>describe, short</code></td><td>Open a dataset and check its size.</td></tr>
     <tr><td><code>lookfor</code>, <code>codebook</code></td><td>Find variables and read their codes.</td></tr>
     <tr><td><code>list</code>, <code>browse</code>, <code>count</code></td><td>Inspect observations.</td></tr>
@@ -575,9 +596,11 @@ search regression</code></pre></div>
 <div class="slide">
   <div class="kicker">Exercise 7 of 11</div>
   <h2>Open the data</h2>
-  <div class="exq">Open the BDHS file from your working folder. How many observations and variables does it contain?</div>
+  <div class="exq">Raise the variable limit to 10,000, open the BDHS file from your working folder, and check how many observations and variables it contains.</div>
   <details><summary>Show answer</summary>
-    <div class="codewrap"><pre><code>use "BDIR81FL.DTA", clear
+    <div class="codewrap"><pre><code>clear all
+set maxvar 10000
+use "BDIR81FL.DTA", clear
 describe, short</code></pre></div>
     <p>The output reports 30,078 observations and 5,425 variables.</p>
   </details>
