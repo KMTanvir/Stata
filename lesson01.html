@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Session 1: Overview of Stata and Working Environment</title>
+<title>Session 1: Stata Environment, Opening Data and Importing</title>
 <style>
 :root{
   --bg:#f6f7f9; --card:#ffffff; --ink:#14202e; --muted:#5b6b7c; --line:#e1e6ec;
@@ -102,20 +102,20 @@ details[open] summary{margin-bottom:8px}
 <div class="stage" id="stage">
 <div data-part="slides">
 <div class="slide title">
-  <div class="kicker">Session 1 of 10</div>
-  <h1>Overview of Stata and Working Environment</h1>
-  <p>What Stata is, how its windows are organised, how to read a command, how to find help, how data are entered by hand, where Stata looks for files, and how do files work.</p>
-  <span class="chip">60 minutes</span><span class="chip">Lab based exercise</span><span class="chip">Stata 15 or later</span>
+  <div class="kicker">Session 1 of 5</div>
+  <h1>Stata Environment, Opening Data and Importing</h1>
+  <p>The Stata interface, reading commands, help, the working folder and do files, followed by opening a dataset, variable types, labels, missing values and importing Excel and CSV files.</p>
+  <span class="chip">120 minutes</span><span class="chip">Lab based exercise</span><span class="chip">Stata 15 or later</span>
   <div class="obj">
     <h3>Learning objectives</h3>
     <p>By the end of this session, participants will be able to:</p>
     <ul>
       <li>Identify the main windows of Stata and state the purpose of each.</li>
-      <li>Read a Stata command and explain each of its parts.</li>
-      <li>Recognise common error messages and their usual causes.</li>
-      <li>Use the help system to learn an unfamiliar command.</li>
-      <li>Set the working folder and confirm it.</li>
-      <li>Explain what a do file is and how comments are written in it.</li>
+      <li>Read a Stata command and recognise common error messages.</li>
+      <li>Use the help system, set the working folder and run a do file.</li>
+      <li>Open the BDHS dataset and inspect it with basic commands.</li>
+      <li>Distinguish numeric and string variables, and use labels and missing values correctly.</li>
+      <li>Import Excel and CSV files and save the data in Stata format.</li>
     </ul>
   </div>
 </div>
@@ -217,7 +217,7 @@ details[open] summary{margin-bottom:8px}
     <li>Stata names the columns <code>var1</code>, <code>var2</code> and so on. Select a variable and change its name and label in the <b>Properties</b> window.</li>
     <li>A column that holds only numbers becomes a numeric variable. A column that holds text becomes a string variable.</li>
   </ul>
-  <div class="note"><p>Typing suits very small tables. Larger data should be imported from a file, which is covered in Session 2.</p></div>
+  <div class="note"><p>Typing suits very small tables. Larger data should be imported from a file, which is covered later in this session.</p></div>
 </div>
 <div class="slide">
   <div class="kicker">Syntax and help</div>
@@ -319,8 +319,166 @@ ls</code></pre></div>
   <p>Comments explain why a step is taken. They are ignored when the do file runs.</p>
 </div>
 <div class="slide">
+  <div class="kicker">Opening a dataset</div>
+  <h2>Opening the BDHS dataset</h2>
+  <div class="codewrap"><pre><code>use "BDIR81FL.DTA", clear
+describe, short</code></pre></div>
+  <ul>
+    <li><code>use</code> loads a Stata dataset into memory. The <code>clear</code> option discards any dataset already there.</li>
+    <li><code>describe, short</code> reports only the number of observations and variables, along with the size of the data.</li>
+  </ul>
+  <div class="note"><p><b>Avoid a plain describe on this file.</b> With 5,425 variables, <code>describe</code> fills the Results window with a very long list. Use the <code>short</code> option first.</p></div>
+</div>
+<div class="slide">
+  <div class="kicker">Opening a dataset</div>
+  <h2>Finding variables in a large dataset</h2>
+  <div class="codewrap"><pre><code>lookfor education
+lookfor wealth
+codebook v106</code></pre></div>
+  <ul>
+    <li><code>lookfor</code> searches variable names and labels for a word, which is the standard way to find a variable in a DHS file.</li>
+    <li><code>codebook</code> shows the label, the type, and the coded values of a variable, with their meanings.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Opening a dataset</div>
+  <h2>Looking at observations</h2>
+  <div class="codewrap"><pre><code>list v001 v002 v003 v012 v025 in 1/5
+browse v001 v002 v003 v012 v025
+count
+count if v025 == 2</code></pre></div>
+  <ul>
+    <li><code>list</code> prints values in the Results window. <code>in 1/5</code> limits the output to the first five rows.</li>
+    <li><code>browse</code> opens the Data Browser, here limited to the named variables.</li>
+    <li><code>count</code> reports the number of observations, optionally those meeting a condition.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Opening a dataset</div>
+  <h2>First summaries</h2>
+  <div class="codewrap"><pre><code>summarize v012 v201
+tabulate v025
+tabulate v106
+tabulate v025 v106, row</code></pre></div>
+  <ul>
+    <li><code>summarize</code> reports the number of observations, mean, standard deviation, minimum and maximum of numeric variables.</li>
+    <li><code>tabulate</code> gives frequencies of a categorical variable. With two variables it gives a cross table, and <code>row</code> adds row percentages.</li>
+  </ul>
+  <p>Read the output together with the codebook, so that each code is matched to its meaning.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Structure</div>
+  <h2>Two kinds of variable</h2>
+  <table>
+    <tr><th>Kind</th><th>Holds</th><th>Examples in the BDHS file</th></tr>
+    <tr><td>Numeric</td><td>Numbers, including coded categories</td><td><code>v012</code> age, <code>v201</code> children ever born, <code>v025</code> residence (coded 1 and 2)</td></tr>
+    <tr><td>String</td><td>Text of any kind</td><td>Names, free text answers, identifiers such as <code>caseid</code></td></tr>
+  </table>
+  <p>Arithmetic and most statistical commands need numeric variables. A categorical variable is normally stored as a numeric code, with a value label that supplies the words.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Working with the BDHS file</div>
+  <h2>Keeping the variables you need</h2>
+  <p>The BDHS file has 5,425 variables, but an analysis normally needs only a few. The command <code>keep</code> retains the variables named and removes all others from memory.</p>
+  <div class="codewrap"><pre><code>keep v001 v002 v003 v005 v012 v024 v025 v106 v190 v201
+describe</code></pre></div>
+  <p>The file on disk is not changed until a dataset is saved over it. Working with a small subset makes every later command faster and the output easier to read.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Working with the BDHS file</div>
+  <h2>Variable labels and value labels</h2>
+  <p>A <b>variable label</b> describes the variable. A <b>value label</b> attaches words to numeric codes, so that the code 2 can display as rural.</p>
+  <div class="codewrap"><pre><code>describe v025
+label list V025
+tabulate v025
+tabulate v025, nolabel</code></pre></div>
+  <ul>
+    <li>The name of the value label is shown in the <code>describe</code> output. In this file the labels are named in capitals, such as <code>V025</code>.</li>
+    <li><code>label list</code> prints the codes and their words.</li>
+    <li>The <code>nolabel</code> option shows the underlying numeric codes instead of the words.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Working with the BDHS file</div>
+  <h2>Missing values</h2>
+  <ul>
+    <li>A missing numeric value is shown as a period, <code>.</code>. A missing string is an empty text.</li>
+    <li>Stata also has extended missing codes, <code>.a</code> to <code>.z</code>, that record why a value is missing.</li>
+    <li>In comparisons, a missing numeric value counts as larger than any number, so a condition such as <code>v201 &gt; 5</code> is true for missing values.</li>
+    <li>Use the function <code>missing()</code> to test for missing values safely.</li>
+  </ul>
+  <div class="codewrap"><pre><code>count if missing(v201)
+count if v201 > 5 &amp; !missing(v201)</code></pre></div>
+  <div class="note"><p>Survey files often store a special code, such as 99 or 998, for answers that are not known. Such a code is an ordinary number to Stata until it is converted to missing, which is covered in Session 2.</p></div>
+</div>
+<div class="slide">
+  <div class="kicker">Saving data</div>
+  <h2>Saving and reopening a dataset</h2>
+  <div class="codewrap"><pre><code>save "bdhs_small.dta", replace
+use "bdhs_small.dta", clear</code></pre></div>
+  <ul>
+    <li><code>save</code> writes the dataset in memory to a <code>.dta</code> file. Without <code>replace</code>, Stata refuses to overwrite an existing file of the same name.</li>
+    <li>Saving under a new name keeps the original file safe. Never save over the raw data file.</li>
+    <li>A colleague using an older version of Stata may need <code>saveold "bdhs_small.dta", replace</code>, which writes a copy that older versions can read.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Importing</div>
+  <h2>Practice files for importing</h2>
+  <p>Two small files are provided with this session. Both hold the same 300 women, drawn at random from the BDHS file, with readable column names.</p>
+  <table>
+    <tr><th>File</th><th>Contents</th></tr>
+    <tr><td><code>bdhs_sample.xlsx</code></td><td>Excel workbook with a sheet called <b>Women</b> holding the data and a sheet called <b>Notes</b> describing the columns.</td></tr>
+    <tr><td><code>bdhs_sample.csv</code></td><td>The same data as plain text, with commas between values.</td></tr>
+  </table>
+  <p>Download both files from the course folder and save them in the working folder.</p>
+</div>
+<div class="slide">
+  <div class="kicker">Importing</div>
+  <h2>Importing an Excel file</h2>
+  <div class="codewrap"><pre><code>import excel "bdhs_sample.xlsx", sheet("Women") firstrow clear
+describe
+list in 1/5</code></pre></div>
+  <ul>
+    <li><code>sheet()</code> names the worksheet to read. Without it, Stata reads the first sheet.</li>
+    <li><code>firstrow</code> tells Stata that the first row holds the variable names.</li>
+    <li><code>clear</code> discards any dataset already in memory.</li>
+    <li>To read only part of a sheet, add <code>cellrange(A1:H301)</code>.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Importing</div>
+  <h2>Importing a CSV file</h2>
+  <div class="codewrap"><pre><code>import delimited "bdhs_sample.csv", clear
+describe
+list in 1/5</code></pre></div>
+  <ul>
+    <li><code>import delimited</code> reads text files whose values are separated by commas, tabs or another character.</li>
+    <li>Stata uses the first row as variable names when it looks like a header.</li>
+    <li>Add <code>delimiter(";")</code> if the separator is not a comma.</li>
+  </ul>
+</div>
+<div class="slide">
+  <div class="kicker">Do files</div>
+  <h2>A standard do file template</h2>
+  <div class="codewrap"><pre><code>* Session 1: opening and inspecting data
+* Author and date: write here
+
+clear all
+set more off
+
+cd "C:\StataCourse"
+
+use "BDIR81FL.DTA", clear
+describe, short
+summarize v012 v201
+tabulate v025
+tabulate v106</code></pre></div>
+  <p>The structure matters most: clear the workspace, set the folder, open the data, then do the work.</p>
+</div>
+<div class="slide">
   <div class="kicker">Summary</div>
-  <h2>Key points</h2>
+  <h2>Key points: the working environment</h2>
   <table>
     <tr><th>Topic</th><th>Remember</th></tr>
     <tr><td>Windows</td><td>Command to type, Results to read, History to repeat, Variables and Properties to inspect the data.</td></tr>
@@ -332,16 +490,32 @@ ls</code></pre></div>
     <tr><td>Do files</td><td>A saved list of commands, opened with <code>doedit</code>, that makes work repeatable.</td></tr>
   </table>
 </div>
+<div class="slide">
+  <div class="kicker">Summary</div>
+  <h2>Commands: opening and importing data</h2>
+  <table>
+    <tr><th>Command</th><th>Purpose</th></tr>
+    <tr><td><code>use</code>, <code>describe, short</code></td><td>Open a dataset and check its size.</td></tr>
+    <tr><td><code>lookfor</code>, <code>codebook</code></td><td>Find variables and read their codes.</td></tr>
+    <tr><td><code>list</code>, <code>browse</code>, <code>count</code></td><td>Inspect observations.</td></tr>
+    <tr><td><code>summarize</code>, <code>tabulate</code></td><td>First summaries.</td></tr>
+    <tr><td><code>keep</code></td><td>Retain selected variables.</td></tr>
+    <tr><td><code>label list</code>, <code>tabulate, nolabel</code></td><td>See value labels and the codes beneath them.</td></tr>
+    <tr><td><code>count if missing()</code></td><td>Count missing values.</td></tr>
+    <tr><td><code>save</code>, <code>saveold</code>, <code>use</code></td><td>Write and read Stata datasets.</td></tr>
+    <tr><td><code>import excel</code>, <code>import delimited</code></td><td>Read Excel and text files.</td></tr>
+  </table>
+</div>
 </div>
 
 <div data-part="exercise">
 <div class="slide">
   <div class="kicker">Exercise</div>
   <h2>Practical exercises</h2>
-  <p>This part has six short tasks. The first four need no data: they ask you to name windows and read commands. The last two use Stata: setting the working folder and writing a first do file. Attempt each task before opening the answer.</p>
+  <p>This part has 11 tasks. The first four need no data: they ask you to name windows and read commands. The rest use Stata. Place the BDHS file and the two practice files in your working folder, write the commands in a do file, run them, and then open the answer to compare.</p>
 </div>
 <div class="slide">
-  <div class="kicker">Exercise 1 of 6</div>
+  <div class="kicker">Exercise 1 of 11</div>
   <h2>Name the window</h2>
   <div class="exq">Which window would you use to (a) type a command, (b) read the output, (c) see the commands already run, and (d) see the names of the variables?</div>
   <details><summary>Show answer</summary>
@@ -349,7 +523,7 @@ ls</code></pre></div>
   </details>
 </div>
 <div class="slide">
-  <div class="kicker">Exercise 2 of 6</div>
+  <div class="kicker">Exercise 2 of 11</div>
   <h2>Read a command</h2>
   <div class="exq">Explain each part of this command: what it does, to which variables, for which observations, and with which option.
     <div class="codewrap"><pre><code>summarize v012 v201 if v025 == 2, detail</code></pre></div></div>
@@ -358,7 +532,7 @@ ls</code></pre></div>
   </details>
 </div>
 <div class="slide">
-  <div class="kicker">Exercise 3 of 6</div>
+  <div class="kicker">Exercise 3 of 11</div>
   <h2>Read two more commands</h2>
   <div class="exq">Explain what each of these commands asks Stata to do.
     <div class="codewrap"><pre><code>list v001 v002 v012 in 1/10
@@ -368,7 +542,7 @@ tabulate v025 v106, row</code></pre></div></div>
   </details>
 </div>
 <div class="slide">
-  <div class="kicker">Exercise 4 of 6</div>
+  <div class="kicker">Exercise 4 of 11</div>
   <h2>Interpret the errors</h2>
   <div class="exq">Give the likely cause of each message, and say how it would be corrected.
     <ul><li>unrecognized command: Summarize, r(199)</li><li>variable v02 not found, r(111)</li><li>file BDIR81FL.DTA not found, r(601)</li></ul></div>
@@ -377,7 +551,7 @@ tabulate v025 v106, row</code></pre></div></div>
   </details>
 </div>
 <div class="slide">
-  <div class="kicker">Exercise 5 of 6</div>
+  <div class="kicker">Exercise 5 of 11</div>
   <h2>Set the working folder</h2>
   <div class="exq">Create a folder called <code>StataCourse</code> on your computer, and save the BDHS file in it. In Stata, make it the working folder, confirm the change, and list the files it holds.</div>
   <details><summary>Show answer</summary>
@@ -388,7 +562,7 @@ ls</code></pre></div>
   </details>
 </div>
 <div class="slide">
-  <div class="kicker">Exercise 6 of 6</div>
+  <div class="kicker">Exercise 6 of 11</div>
   <h2>Write a first do file</h2>
   <div class="exq">Open the Do file Editor with <code>doedit</code>, type the three lines below, save the file as <code>session1.do</code>, and run it.</div>
   <details><summary>Show answer</summary>
@@ -399,9 +573,67 @@ search regression</code></pre></div>
   </details>
 </div>
 <div class="slide">
+  <div class="kicker">Exercise 7 of 11</div>
+  <h2>Open the data</h2>
+  <div class="exq">Open the BDHS file from your working folder. How many observations and variables does it contain?</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>use "BDIR81FL.DTA", clear
+describe, short</code></pre></div>
+    <p>The output reports 30,078 observations and 5,425 variables.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 8 of 11</div>
+  <h2>Find and inspect</h2>
+  <div class="exq">Find the variables that refer to education and show the coded values of the highest educational level. List the identifiers and age of the first ten women, then summarise age and children ever born for the rural women, after confirming the code for rural.</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>lookfor education
+codebook v106
+list v001 v002 v003 v012 in 1/10
+codebook v025
+summarize v012 v201 if v025 == 2</code></pre></div>
+    <p>Check in the codebook that the value 2 carries the label for rural.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 9 of 11</div>
+  <h2>Make a smaller file</h2>
+  <div class="exq">Keep the variables <code>v001</code>, <code>v002</code>, <code>v003</code>, <code>v005</code>, <code>v012</code>, <code>v025</code>, <code>v106</code> and <code>v201</code>. Check them with <code>describe</code>, count the women with missing children ever born, and save the result as <code>bdhs_small.dta</code>.</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>keep v001 v002 v003 v005 v012 v025 v106 v201
+describe
+count if missing(v201)
+save "bdhs_small.dta", replace</code></pre></div>
+    <p>The count of missing values is zero for this variable.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 10 of 11</div>
+  <h2>Import the Excel file</h2>
+  <div class="exq">Import the sheet called Women from <code>bdhs_sample.xlsx</code>. How many observations and variables are there, and which variables are strings?</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>import excel "bdhs_sample.xlsx", sheet("Women") firstrow clear
+describe
+list in 1/5</code></pre></div>
+    <p>There are 300 observations and 8 variables. The variables <code>residence</code>, <code>education</code> and <code>wealth</code> are strings.</p>
+  </details>
+</div>
+<div class="slide">
+  <div class="kicker">Exercise 11 of 11</div>
+  <h2>Import the CSV file</h2>
+  <div class="exq">Import <code>bdhs_sample.csv</code>, inspect it, and save it as <code>bdhs_sample.dta</code>. Compare the result with the Excel import.</div>
+  <details><summary>Show answer</summary>
+    <div class="codewrap"><pre><code>import delimited "bdhs_sample.csv", clear
+describe
+list in 1/5
+save "bdhs_sample.dta", replace</code></pre></div>
+    <p>The two imports give the same 300 observations and 8 variables, with the same three string variables.</p>
+  </details>
+</div>
+<div class="slide">
   <div class="kicker">Session 1 complete</div>
   <h2>Next: Session 2</h2>
-  <p>The next session opens the BDHS dataset, and covers data types and structure, data entry and importing.</p>
+  <p>The next session covers data preparation: creating, recoding and labelling variables, and cleaning and organising datasets.</p>
   <p><a href="lesson02.html"><b>Continue to Session 2</b></a> or <a href="index.html"><b>return to all sessions</b></a>.</p>
 </div>
 </div>

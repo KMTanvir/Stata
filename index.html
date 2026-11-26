@@ -22,6 +22,8 @@ a{color:var(--brand);text-decoration:none}
 .hero p{max-width:680px;font-size:18px;opacity:.93;margin:0 0 28px}
 .tag{display:inline-block;font-size:12px;letter-spacing:1.6px;text-transform:uppercase;background:rgba(255,255,255,.15);padding:5px 14px;border-radius:99px;margin-bottom:18px}
 .btn{display:inline-block;background:var(--accent);color:#2a1a00;font-weight:600;padding:12px 24px;border-radius:10px}
+.btn.ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.6);margin-left:10px}
+.btn.ghost:hover{background:rgba(255,255,255,.12)}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:-34px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.06)}
 .stat b{display:block;font-size:28px;color:var(--brand)}
@@ -47,7 +49,7 @@ h2{font-size:28px;margin:0 0 6px}
 .box ul{margin:0;padding-left:18px;color:var(--muted)}
 .box li{margin:7px 0}
 footer{margin-top:64px;padding:28px 0;border-top:1px solid var(--line);color:var(--muted);font-size:14px}
-@media(max-width:760px){.stats{grid-template-columns:1fr}.outcomes{grid-template-columns:1fr}.lesson{grid-template-columns:48px 1fr}.right{grid-column:2;text-align:left}}
+@media(max-width:760px){.btn.ghost{margin:10px 0 0}.stats{grid-template-columns:1fr}.outcomes{grid-template-columns:1fr}.lesson{grid-template-columns:48px 1fr}.right{grid-column:2;text-align:left}}
 </style>
 </head>
 <body>
@@ -56,13 +58,13 @@ footer{margin-top:64px;padding:28px 0;border-top:1px solid var(--line);color:var
   <span class="tag">Training Programme</span>
   <h1>Applied Data Analysis with Stata</h1>
   <p>A structured ten hour, lab based programme covering data management, descriptive and inferential analysis, regression modelling and professional reporting using Stata.</p>
-  <a class="btn" href="lesson01.html">Begin Session 1</a>
+  <a class="btn" href="lesson01.html">Begin Session 1</a><a class="btn ghost" href="https://drive.google.com/drive/folders/1QyAqQFbIegj-qOq1fUyEbazxB2lPlQYt?usp=sharing" target="_blank" rel="noopener">Download the dataset</a>
 </div></header>
 
 <div class="wrap">
   <div class="stats">
     <div class="stat"><b>10</b><span>contact hours</span></div>
-    <div class="stat"><b>10</b><span>sessions of 60 minutes</span></div>
+    <div class="stat"><b>5</b><span>sessions of 2 hours</span></div>
     <div class="stat"><b>100%</b><span>lab based exercises</span></div>
   </div>
 
@@ -71,25 +73,15 @@ footer{margin-top:64px;padding:28px 0;border-top:1px solid var(--line);color:var
     <p class="sub">Each session combines a concise explanation with guided practice in Stata and a short independent exercise.</p>
     <div class="list">
 
-      <div class="lesson"><div class="num">1</div><div><h3>Overview of Stata and Working Environment</h3><p>The Stata interface, command syntax, the help system, working directories, log files and do files.</p><div class="cmds"><span>help</span><span>cd</span><span>log using</span><span>sysuse</span><span>browse</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson01.html">Open session</a></div></div>
+      <div class="lesson"><div class="num">1</div><div><h3>Stata Environment, Opening Data and Importing</h3><p>The Stata interface, reading commands, help, the working folder and do files; then opening a dataset, variable types, labels, missing values and importing Excel and CSV files.</p><div class="cmds"><span>help</span><span>cd</span><span>doedit</span><span>use</span><span>describe</span><span>import excel</span></div></div><div class="right"><div class="dur">120 minutes</div><a class="go" href="lesson01.html">Open session</a></div></div>
 
-      <div class="lesson"><div class="num">2</div><div><h3>Data Types, Structure, Entry and Importing</h3><p>Numeric and string variables, storage types, direct data entry, importing Excel and CSV files, and saving datasets.</p><div class="cmds"><span>describe</span><span>input</span><span>import excel</span><span>import delimited</span><span>save</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson02.html">Open session</a></div></div>
+      <div class="lesson"><div class="num">2</div><div><h3>Data Preparation: Variable Manipulation and Data Cleaning</h3><p>Creating, modifying, recoding and labelling variables; identifying missing values, duplicates and implausible entries; sorting, merging and appending datasets.</p><div class="cmds"><span>generate</span><span>recode</span><span>label define</span><span>duplicates</span><span>merge</span><span>append</span></div></div><div class="right"><div class="dur">120 minutes</div><a class="go" href="lesson02.html">Open session</a></div></div>
 
-      <div class="lesson"><div class="num">3</div><div><h3>Variable Manipulation</h3><p>Creating, modifying, renaming and labelling variables, recoding categories and constructing derived measures.</p><div class="cmds"><span>generate</span><span>replace</span><span>recode</span><span>label define</span><span>egen</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson03.html">Open session</a></div></div>
+      <div class="lesson"><div class="num">3</div><div><h3>Descriptive Statistics and Data Visualization</h3><p>Summary measures and tabulation across groups; histograms, box plots, bar charts, scatter plots and line graphs, with graph export.</p><div class="cmds"><span>summarize</span><span>tabulate</span><span>tabstat</span><span>histogram</span><span>graph box</span><span>twoway</span></div></div><div class="right"><div class="dur">120 minutes</div><a class="go" href="lesson03.html">Open session</a></div></div>
 
-      <div class="lesson"><div class="num">4</div><div><h3>Data Cleaning and Organization</h3><p>Identifying missing values, duplicates and implausible entries, and organising data through sorting, merging and appending.</p><div class="cmds"><span>misstable</span><span>duplicates</span><span>assert</span><span>merge</span><span>append</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson04.html">Open session</a></div></div>
+      <div class="lesson"><div class="num">4</div><div><h3>Inferential Statistics and Linear Regression</h3><p>Confidence intervals, t tests, the chi square test, correlation and non parametric alternatives; simple and multiple linear regression, categorical predictors and diagnostics.</p><div class="cmds"><span>ci means</span><span>ttest</span><span>tabulate, chi2</span><span>regress</span><span>predict</span><span>estat hettest</span></div></div><div class="right"><div class="dur">120 minutes</div><a class="go" href="lesson04.html">Open session</a></div></div>
 
-      <div class="lesson"><div class="num">5</div><div><h3>Descriptive Statistics</h3><p>Summary measures for continuous and categorical variables, and tabulation across groups.</p><div class="cmds"><span>summarize</span><span>tabulate</span><span>table</span><span>tabstat</span><span>codebook</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson05.html">Open session</a></div></div>
-
-      <div class="lesson"><div class="num">6</div><div><h3>Data Visualization</h3><p>Histograms, box plots, bar charts, scatter plots and line graphs, with titles, labels, colours and graph export.</p><div class="cmds"><span>histogram</span><span>graph box</span><span>graph bar</span><span>twoway</span><span>graph export</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson06.html">Open session</a></div></div>
-
-      <div class="lesson"><div class="num">7</div><div><h3>Inferential Statistics</h3><p>Confidence intervals, t tests, the chi square test, correlation, normality assessment and non parametric alternatives.</p><div class="cmds"><span>ci means</span><span>ttest</span><span>tabulate, chi2</span><span>pwcorr</span><span>ranksum</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson07.html">Open session</a></div></div>
-
-      <div class="lesson"><div class="num">8</div><div><h3>Regression Modelling I: Linear Regression</h3><p>Simple and multiple linear regression, categorical predictors, interpretation of coefficients, prediction and diagnostics.</p><div class="cmds"><span>regress</span><span>i.</span><span>predict</span><span>margins</span><span>estat hettest</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson08.html">Open session</a></div></div>
-
-      <div class="lesson"><div class="num">9</div><div><h3>Regression Modelling II: Logistic Regression</h3><p>Binary outcomes, odds ratios, model fit, model comparison and presentation of adjusted results.</p><div class="cmds"><span>logit</span><span>logistic</span><span>estat classification</span><span>lroc</span><span>estimates store</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson09.html">Open session</a></div></div>
-
-      <div class="lesson"><div class="num">10</div><div><h3>Output, Interpretation and Report Writing</h3><p>Exporting tables and graphs, interpreting output accurately and presenting findings in a concise, reproducible report.</p><div class="cmds"><span>putexcel</span><span>esttab</span><span>collect</span><span>graph export</span><span>log close</span></div></div><div class="right"><div class="dur">60 minutes</div><a class="go" href="lesson10.html">Open session</a></div></div>
+      <div class="lesson"><div class="num">5</div><div><h3>Logistic Regression, Output and Reporting</h3><p>Binary outcomes and odds ratios; exporting tables and graphs, interpreting output and presenting findings in a concise, reproducible report.</p><div class="cmds"><span>logit</span><span>logistic</span><span>margins</span><span>putexcel</span><span>esttab</span><span>putdocx</span></div></div><div class="right"><div class="dur">120 minutes</div><a class="go" href="lesson05.html">Open session</a></div></div>
 
     </div>
   </section>
